@@ -1,0 +1,191 @@
+/* =============================================
+   Love Box - Global Stylesheet
+   ============================================= */
+
+/* Import Google Fonts - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================
+   Base Styles - Pengaturan dasar
+   ============================================= */
+@layer base {
+  /* Set Poppins sebagai font default */
+  body {
+    @apply font-poppins text-text-dark bg-background antialiased;
+  }
+
+  /* Reset link styles */
+  a {
+    @apply text-inherit no-underline;
+  }
+
+  /* Scrollbar kustom untuk tampilan lebih rapi */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/80;
+  }
+}
+
+/* =============================================
+   Component Styles - Komponen yang sering dipakai
+   ============================================= */
+@layer components {
+  /* Tombol utama (pink) */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary text-white font-semibold rounded-2xl
+           shadow-lg hover:shadow-xl hover:scale-105
+           transition-all duration-300 ease-out
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Tombol sekunder (biru) */
+  .btn-secondary {
+    @apply px-6 py-3 bg-secondary text-text-dark font-semibold rounded-2xl
+           shadow-lg hover:shadow-xl hover:scale-105
+           transition-all duration-300 ease-out
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Tombol aksen (oranye) */
+  .btn-accent {
+    @apply px-6 py-3 bg-accent text-text-dark font-semibold rounded-2xl
+           shadow-lg hover:shadow-xl hover:scale-105
+           transition-all duration-300 ease-out
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Kartu dengan efek glassmorphism */
+  .card-glass {
+    @apply bg-white/70 backdrop-blur-lg rounded-3xl shadow-xl
+           border border-white/30 p-6
+           transition-all duration-300 hover:shadow-2xl;
+  }
+
+  /* Input field dengan style Love Box */
+  .input-love {
+    @apply w-full px-4 py-3 rounded-2xl border-2 border-primary/30
+           bg-white/80 backdrop-blur-sm
+           focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20
+           transition-all duration-300 placeholder:text-text-dark/40;
+  }
+
+  /* Badge/label kecil */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-online {
+    @apply badge bg-green-100 text-green-700;
+  }
+
+  .badge-offline {
+    @apply badge bg-red-100 text-red-700;
+  }
+}
+
+/* =============================================
+   Utility Styles - Utilitas tambahan
+   ============================================= */
+@layer utilities {
+  /* Animasi fade-in kustom */
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  /* Animasi shake untuk error */
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  /* Gradient teks romantis */
+  .text-gradient-love {
+    @apply bg-gradient-to-r from-primary via-pink-400 to-accent
+           bg-clip-text text-transparent;
+  }
+
+  /* Background gradient lembut */
+  .bg-gradient-love {
+    @apply bg-gradient-to-br from-background via-white to-primary/10;
+  }
+
+  /* Efek hover mengambang */
+  .hover-float {
+    @apply transition-transform duration-300 hover:-translate-y-1;
+  }
+}
+
+/* =============================================
+   Keyframes - Animasi kustom
+   ============================================= */
+
+/* Animasi fade-in */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animasi shake untuk login gagal */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+/* Animasi heartbeat */
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
