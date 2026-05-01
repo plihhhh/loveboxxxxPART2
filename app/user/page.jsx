@@ -63,7 +63,9 @@ export default function UserDashboard() {
   // State: Kelola Foto (Card C)
   const [fotos, setFotos] = useState([]);
   const [loadingFotoUpload, setLoadingFotoUpload] = useState(false);
-  const fileInputRef = useRef(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const fileInputCameraRef = useRef(null); // kamera
+  const fileInputGalleryRef = useRef(null); // galeri
 
   // State: Kecerahan (Card D)
   const [brightness, setBrightness] = useState(50);
@@ -186,6 +188,7 @@ export default function UserDashboard() {
     const file = e.target.files?.[0];
     if (!file) return;
     
+    setShowUploadModal(false);
     setLoadingFotoUpload(true);
     const formData = new FormData();
     formData.append("file", file);
@@ -197,7 +200,6 @@ export default function UserDashboard() {
       });
       if (res.ok) {
         toast.success("Foto berhasil diupload! 📸");
-        // Refresh daftar foto
         const resData = await res.json();
         if (resData.fotos) setFotos(resData.fotos);
         else if (Array.isArray(resData)) setFotos(resData);
@@ -206,6 +208,7 @@ export default function UserDashboard() {
       toast.error("Gagal upload foto");
     }
     setLoadingFotoUpload(false);
+    e.target.value = "";
   };
 
   const handleHapusFoto = async (id) => {
@@ -247,6 +250,85 @@ export default function UserDashboard() {
     // Background light pastel blue
     <div className="min-h-screen bg-[#F0F7FF] text-[#4A4A4A] pb-12 font-poppins" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <Toaster position="top-center" />
+
+      {/* ========== MODAL PILIHAN UPLOAD ========== */}
+      {showUploadModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center"
+          onClick={() => setShowUploadModal(false)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+
+          {/* Bottom Sheet */}
+          <div
+            className="relative w-full max-w-md bg-white rounded-t-3xl p-6 shadow-2xl"
+            style={{ animation: "slideUp 0.25s ease-out" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Handle bar */}
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-5" />
+            <h3 className="text-center text-base font-bold text-gray-800 mb-5">
+              Tambah Foto 📸
+            </h3>
+
+            <div className="flex flex-col gap-3">
+              {/* Kamera */}
+              <button
+                onClick={() => fileInputCameraRef.current?.click()}
+                className="flex items-center gap-4 w-full p-4 rounded-2xl bg-pink-50 border border-pink-100 hover:border-pink-300 hover:bg-pink-100/60 transition-all active:scale-[0.98]"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-2xl shadow-md shadow-pink-200/40 flex-shrink-0">
+                  📷
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-gray-800 text-sm">Ambil dari Kamera</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Foto langsung sekarang</p>
+                </div>
+              </button>
+
+              {/* Galeri */}
+              <button
+                onClick={() => fileInputGalleryRef.current?.click()}
+                className="flex items-center gap-4 w-full p-4 rounded-2xl bg-blue-50 border border-blue-100 hover:border-blue-300 hover:bg-blue-100/60 transition-all active:scale-[0.98]"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-2xl shadow-md shadow-blue-200/40 flex-shrink-0">
+                  🖼️
+                </div>
+                <div className="text-left">
+                  <p className="font-bold text-gray-800 text-sm">Pilih dari Galeri</p>
+                  <p className="text-xs text-gray-500 mt-0.5">Dari penyimpanan HP</p>
+                </div>
+              </button>
+
+              {/* Batal */}
+              <button
+                onClick={() => setShowUploadModal(false)}
+                className="w-full py-3.5 rounded-2xl bg-gray-100 text-gray-600 font-semibold text-sm hover:bg-gray-200 transition-colors active:scale-[0.98]"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Hidden file inputs */}
+      <input
+        ref={fileInputCameraRef}
+        type="file"
+        className="hidden"
+        accept="image/*"
+        capture="environment"
+        onChange={handleUploadFoto}
+      />
+      <input
+        ref={fileInputGalleryRef}
+        type="file"
+        className="hidden"
+        accept="image/*"
+        onChange={handleUploadFoto}
+      />
       
       {/* HEADER STICKY */}
       <header className="sticky top-0 bg-white/90 backdrop-blur-md shadow-sm z-50 mb-6">
@@ -458,20 +540,13 @@ export default function UserDashboard() {
 
           <div 
             className="border-2 border-dashed border-[#B4D4F8] bg-blue-50/30 rounded-xl p-6 text-center cursor-pointer hover:bg-blue-50/50 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => !loadingFotoUpload && setShowUploadModal(true)}
           >
-            <input 
-              type="file" 
-              className="hidden" 
-              ref={fileInputRef} 
-              accept="image/*" 
-              capture="environment" /* Prioritaskan kamera belakang jika di HP */
-              onChange={handleUploadFoto}
-            />
             <div className="w-12 h-12 bg-blue-100 text-[#79a9e3] rounded-full flex items-center justify-center mx-auto mb-2 shadow-sm">
               <Upload size={24} />
             </div>
             <p className="text-sm text-gray-500 font-medium">Buka Kamera atau Galeri</p>
+            <p className="text-xs text-gray-400 mt-1">Ketuk untuk pilih sumber foto</p>
           </div>
 
           <div className="mt-5 grid grid-cols-2 md:grid-cols-3 gap-3">

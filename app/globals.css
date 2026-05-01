@@ -189,3 +189,15 @@
 .animate-heartbeat {
   animation: heartbeat 1.5s ease-in-out infinite;
 }
+
+/* Animasi slide-up untuk modal bottom sheet */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
