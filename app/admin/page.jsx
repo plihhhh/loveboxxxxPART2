@@ -4,10 +4,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import mqtt from "mqtt";
 import toast, { Toaster } from "react-hot-toast";
 
-const BROKER = "wss://f2cc4b70efa34a2db1687f4fd304f428.s1.eu.hivemq.cloud:8884/mqtt";
+const BROKER = process.env.NEXT_PUBLIC_MQTT_URL;
+  
 const MQTT_OPTS = {
-  username: "Plihhh",
-  password: "Guagakbegokali12",
+  username: process.env.NEXT_PUBLIC_MQTT_USERNAME,
+  password: process.env.NEXT_PUBLIC_MQTT_PASSWORD,
   clientId: "lovebox_admin_" + Math.random().toString(36).slice(2, 10),
   reconnectPeriod: 3000,
   connectTimeout: 10000,
